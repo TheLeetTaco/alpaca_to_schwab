@@ -54,4 +54,3 @@ def get_alpaca_percentages():
     
 if __name__ == '__main__':
     pass
-    # print(check_for_change())

@@ -44,13 +44,15 @@ def _normalize_positions_to_percentages(positions: Any):
     """
     # Try market value first
     percentages = {"assets": {}, "percentages": {}, "portfolio_total": 0.0}
+    check_sum = 0.0
     for row in positions:
         asset = row.get("asset_class")
         sym = row.get("symbol")
         symph = row.get("symphony")
         
         if not sym or asset is None or asset.lower() != "equities" or not symph:
-            continue
+            if sym != "$USD":
+                continue
         # If its in a symphony grab its percentage and assets
         alloc = symph.get("allocation")
         if alloc is not None:
@@ -61,7 +63,10 @@ def _normalize_positions_to_percentages(positions: Any):
                 'qty': symph.get("amount"),
                 'rounded_qty': round(symph.get("amount"), 2)
             }
-
+            percentages["portfolio_total"] += symph.get("value")
+            check_sum += percentages["percentages"][sym]
+    
+    percentages["percentages"]["checksum"] = check_sum
     return percentages
 
 def get_account_data(account_uuid: str):

@@ -280,7 +280,15 @@ class schwab_client:
         logger.info(f"\n=== \nPercentages being used for breakdown \n{pformat(percentages)}\n===")
         
         total = self.get_account_trade_value(account_num)
-
+        
+        if percentages.get("$USD") is not None:
+            logger.info("!!! Found $USD in assets, Extra Padding will be used !!!")
+            extra_padding = percentages.pop("$USD", None)
+            remove = total * (extra_padding / 100)
+            total -= remove
+            logger.info(f"!!! Removing ${remove} from total for Cash held by Symphonies !!!")
+            
+            
         check_sum = 0
         for stock in percentages:
             percentages[stock] = round(total * percentages[stock]/100, 2)
