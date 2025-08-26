@@ -22,7 +22,7 @@ RETRY = int(os.getenv('RETRY'))
 # How long we want to wait after changes are detected
 CHANGE_WAIT = int(os.getenv('CHANGE_WAIT'))
 # Do we want to automatically shut off the script after a certain time?
-AUTO_SHUT_OFF = bool(os.getenv('AUTO_SHUT_OFF'))
+QUIT_AFTER_TRADE = True if os.getenv('QUIT_AFTER_TRADE').lower() == "true" else False
 # --------------------------------------
 
 # How we run the copy trade method
@@ -84,7 +84,7 @@ if __name__ == '__main__':
             
             # Record the changes locally for tomorrow
             save_changes(todays_perctanges)
-            if success and AUTO_SHUT_OFF:
+            if success and QUIT_AFTER_TRADE:
                 logger.info("\n=== Trades Executed Successfully ===\n")
                 print("Trades Executed Successfully")
                 sys.exit()
